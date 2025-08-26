@@ -15,4 +15,4 @@ out/
 .DS_Store
 
 # Others
-node_modules/
+node_module
