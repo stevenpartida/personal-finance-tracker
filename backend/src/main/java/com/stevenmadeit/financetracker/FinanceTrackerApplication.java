@@ -1,4 +1,4 @@
-package com.stevenmadeit.FinanceTracker;
+package com.stevenmadeit.financetracker;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

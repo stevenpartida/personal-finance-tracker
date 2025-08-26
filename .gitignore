@@ -1,0 +1,18 @@
+# Maven
+target/
+*.log
+*.class
+*.jar
+*.war
+*.ear
+
+# IntelliJ
+.idea/
+*.iml
+out/
+
+# Mac
+.DS_Store
+
+# Others
+node_modules/
