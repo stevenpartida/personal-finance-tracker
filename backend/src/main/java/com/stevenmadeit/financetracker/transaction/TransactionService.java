@@ -53,6 +53,12 @@ public class TransactionService {
         User user = users.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
 
+        // Validate name (required)
+        String name = req.name();
+        if (name == null || name.isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Transaction name is required");
+        }
+
         // Validate amount
         BigDecimal amt = req.amount();
         if (amt == null || amt.signum() <= 0) {
@@ -64,19 +70,17 @@ public class TransactionService {
                 .filter(c -> c.getUser() == null || userId.equals(c.getUser().getId()))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid category"));
 
-        if (category.getType() != req.type()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Category type mismatch");
-        }
-
+        MoneyFlowType type = category.getType();
         Instant occurred = Objects.requireNonNullElse(req.occurredOn(), Instant.now());
 
-        // Ensure arg order matches your Transaction constructor
+        // Create the transaction (make sure your Transaction constructor has 'name' first now)
         Transaction tx = new Transaction(
                 user,
                 category,
-                amt,             // BigDecimal amount
-                req.type(),      // MoneyFlowType
-                occurred         // Instant occurredOn
+                name,     // NEW: transaction name
+                amt,
+                type,
+                occurred
         );
 
         Transaction saved = repo.save(tx);
@@ -87,6 +91,7 @@ public class TransactionService {
         return new TransactionResponse(
                 t.getId(),
                 t.getCategory().getId(),
+                t.getName(),
                 t.getType(),
                 t.getAmount(),
                 t.getOccurredOn(),

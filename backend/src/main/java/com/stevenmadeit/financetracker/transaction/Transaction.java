@@ -30,6 +30,9 @@ public class Transaction {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @Column(name = "name", nullable = false)
+    private String name;
+
     @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal amount;
 
@@ -46,9 +49,10 @@ public class Transaction {
     public Transaction() {
     }
 
-    public Transaction(User user, Category category, BigDecimal amount, MoneyFlowType type, Instant occurredOn) {
+    public Transaction(User user, Category category, String name, BigDecimal amount, MoneyFlowType type, Instant occurredOn) {
         this.user = user;
         this.category = category;
+        this.name = name;
         this.amount = amount;
         this.type = type;
         this.occurredOn = occurredOn;
@@ -76,6 +80,14 @@ public class Transaction {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public BigDecimal getAmount() {

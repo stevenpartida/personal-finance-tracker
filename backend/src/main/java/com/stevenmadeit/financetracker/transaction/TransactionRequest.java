@@ -1,6 +1,7 @@
 package com.stevenmadeit.financetracker.transaction;
 
 import com.stevenmadeit.financetracker.shared.MoneyFlowType;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
@@ -10,7 +11,7 @@ import java.util.UUID;
 
 public record TransactionRequest(
         @NotNull UUID categoryId,
-        @NotNull MoneyFlowType type,
+        @NotBlank String name,
         @NotNull @Positive BigDecimal amount,
         @NotNull Instant occurredOn
         ) {

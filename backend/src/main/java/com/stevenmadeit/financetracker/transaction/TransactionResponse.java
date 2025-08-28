@@ -9,6 +9,7 @@ import java.util.UUID;
 public record TransactionResponse(
         UUID id,
         UUID categoryId,
+        String name,
         MoneyFlowType type,
         BigDecimal amount,
         Instant occurredOn,
