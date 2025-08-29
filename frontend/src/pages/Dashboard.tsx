@@ -1,45 +1,37 @@
-import { useEffect, useState } from "react";
-import { listCategories } from "../api/categories";
-import type { Category } from "../api/categories";
-import { listTransactions } from "../api/transactions";
-import type { Transaction } from "../api/transactions";
+import { useEffect, useState } from "react"
+import { listTransactions, type Transaction } from "@/api/transactions"
+import { DataTable } from "@/components/data-table/data-table"
+import { transactionColumns } from "./transactions/columns"
 
 export default function Dashboard() {
-  const [cats, setCats] = useState<Category[]>([]);
-  const [tx, setTx] = useState<Transaction[]>([]);
+  const [tx, setTx] = useState<Transaction[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     (async () => {
       try {
-        const [c, t] = await Promise.all([listCategories(), listTransactions()]);
-        setCats(c);
-        setTx(t);
+        const data = await listTransactions()
+        setTx(data)
       } catch (e) {
-        console.error(e);
-        alert("Failed to load data. Is the backend running? Is userId set?");
+        console.error(e)
+        alert("Failed to load transactions. Is the backend running? Is X-User-Id set?")
+      } finally {
+        setLoading(false)
       }
-    })();
-  }, []);
+    })()
+  }, [])
 
   return (
-    <div style={{ padding: 24 }}>
-      <h1>Dashboard</h1>
+      <section>
+        <div className="bg-stone-950 p-8">
+            <h1 className="text-2xl font-semibold">Transactions</h1>
+            {loading ? (
+              <div className="text-sm text-muted-foreground">Loading…</div>
+            ) : (
+              <DataTable columns={transactionColumns} data={tx} />
+            )}
+        </div>
+      </section>
 
-      <h2>Categories</h2>
-      <ul>
-        {cats.map(c => (
-          <li key={c.id}>{c.name} ({c.type})</li>
-        ))}
-      </ul>
-
-      <h2>Transactions</h2>
-      <ul>
-        {tx.map(t => (
-          <li key={t.id}>
-            {t.type} • ${t.amount} • {new Date(t.occurredOn).toLocaleString()}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+  )
 }

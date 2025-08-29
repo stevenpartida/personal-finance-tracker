@@ -6,7 +6,7 @@ import "./App.css";
 
 export default function App() {
   return (
-    <div>
+    <div className="bg-neutral-800">
       <nav >
         <Link to="/login">Login</Link>
         <Link to="/register">Register</Link>

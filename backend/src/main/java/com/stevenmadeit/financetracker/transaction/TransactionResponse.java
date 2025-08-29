@@ -1,5 +1,6 @@
 package com.stevenmadeit.financetracker.transaction;
 
+import com.stevenmadeit.financetracker.category.CategoryResponse;
 import com.stevenmadeit.financetracker.shared.MoneyFlowType;
 
 import java.math.BigDecimal;
@@ -13,6 +14,7 @@ public record TransactionResponse(
         MoneyFlowType type,
         BigDecimal amount,
         Instant occurredOn,
-        Instant createdAt
+        Instant createdAt,
+        com.stevenmadeit.financetracker.category.CategoryResponse category
 ) {
 }

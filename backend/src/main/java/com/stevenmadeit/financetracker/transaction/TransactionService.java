@@ -88,14 +88,24 @@ public class TransactionService {
     }
 
     private TransactionResponse toResponse(Transaction t) {
+        var c = t.getCategory();
+        var catDto = new com.stevenmadeit.financetracker.category.CategoryResponse(
+                c.getId(),
+                c.getName(),
+                c.getType(),
+                c.getIcon(),
+                c.getColor()
+        );
+
         return new TransactionResponse(
                 t.getId(),
-                t.getCategory().getId(),
+                c.getId(),
                 t.getName(),
                 t.getType(),
                 t.getAmount(),
                 t.getOccurredOn(),
-                t.getCreatedAt()
+                t.getCreatedAt(),
+                catDto // <-- 8th argument
         );
     }
 }
