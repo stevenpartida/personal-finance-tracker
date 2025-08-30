@@ -153,4 +153,17 @@ public class TransactionService {
         return toResponse(updated);
     }
 
+    @Transactional
+    public void delete(UUID userId, UUID transactionId) {
+        Transaction tx = repo.findById(transactionId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Transaction not found"));
+
+        if (!tx.getUser().getId().equals(userId)) {
+            // or throw 404 if you don't want to reveal existence
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not your transaction");
+        }
+
+        repo.delete(tx); // returns void
+    }
+
 }

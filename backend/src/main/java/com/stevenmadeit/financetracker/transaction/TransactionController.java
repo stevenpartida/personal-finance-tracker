@@ -48,4 +48,13 @@ public class TransactionController {
             @Valid @RequestBody TransactionRequest req){
         return service.update(userId, id, req);
     }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(
+            @RequestHeader("X-User-Id") UUID userId,
+            @PathVariable UUID id
+    ) {
+       service.delete(userId, id);
+    }
 }
