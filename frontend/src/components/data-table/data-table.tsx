@@ -62,7 +62,7 @@ export function DataTable<TData, TValue>({
                       <Button
                         variant="ghost"
                         onClick={h.column.getToggleSortingHandler()}
-                        className="p-3 h-auto font-medium text-white "
+                        className="px-2 py-1 my-2 h-auto font-mediumz text-white "
                       >
                         {flexRender(h.column.columnDef.header, h.getContext())}
                         <ArrowUpDown className="ml-1 h-3.5 w-3.5" />

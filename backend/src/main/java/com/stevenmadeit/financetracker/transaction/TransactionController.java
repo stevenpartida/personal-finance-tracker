@@ -1,5 +1,6 @@
 package com.stevenmadeit.financetracker.transaction;
 
+import com.stevenmadeit.financetracker.category.Category;
 import com.stevenmadeit.financetracker.shared.MoneyFlowType;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -37,5 +38,14 @@ public class TransactionController {
             @Valid @RequestBody TransactionRequest req
     ) {
         return service.create(userId, req);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public TransactionResponse update(
+            @RequestHeader("X-User-Id") UUID userId,
+            @PathVariable UUID id,
+            @Valid @RequestBody TransactionRequest req){
+        return service.update(userId, id, req);
     }
 }

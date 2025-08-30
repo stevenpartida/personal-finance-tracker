@@ -108,4 +108,49 @@ public class TransactionService {
                 catDto // <-- 8th argument
         );
     }
+
+    @Transactional
+    public TransactionResponse update(UUID userId, UUID id, TransactionRequest req) {
+        // 1. Make sure the user exists
+        User user = users.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+
+        // 2. Find the transaction you’re trying to update
+        Transaction tx = repo.findById(id)
+                .filter(t -> t.getUser().getId().equals(userId)) // ensure it belongs to this user
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Transaction not found"));
+
+        // 3. Validate the category
+        Category category = categories.findById(req.categoryId())
+                .filter(c -> c.getUser() == null || userId.equals(c.getUser().getId()))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid category"));
+
+        // 4. Validate the name (required, not empty)
+        String name = req.name();
+        if (name == null || name.isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Transaction name is required");
+        }
+
+        // 5. Validate the amount (must be positive)
+        BigDecimal amt = req.amount();
+        if (amt == null || amt.signum() <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Amount must be > 0");
+        }
+
+        // 6. Update fields on the transaction
+        tx.setName(name);
+        tx.setAmount(amt);
+        tx.setCategory(category);
+        tx.setType(category.getType()); // enforce type based on category
+        tx.setOccurredOn(
+                req.occurredOn() != null ? req.occurredOn() : tx.getOccurredOn()
+        );
+
+        // 7. Save updated transaction
+        Transaction updated = repo.save(tx);
+
+        // 8. Convert to response DTO
+        return toResponse(updated);
+    }
+
 }
